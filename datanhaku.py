@@ -44,7 +44,15 @@ def download_file_by_location(location_id, year, month, day):
 
     if response.status_code == 200:
         df = pd.read_csv(io.BytesIO(response.content), compression='gzip')
-        df.to_csv(f"{location_id}-{date_str}.csv", index=False)
+
+for _, row in dif.iterrows():
+    cursor.execute("""
+    INSERT INTO Mittaukset (sensoriID, arvo, aika)
+    VALUES (%s,%s,%s)
+    """,(row ["sensoriId"],row ["arvo"],row ["aika"]))
+    conn.commit()
+
+        
         print("Tallennettu:", f"{location_id}-{date_str}.csv")
     else:
         print("Ei dataa, status:", response.status_code)
