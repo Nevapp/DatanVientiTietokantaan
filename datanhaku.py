@@ -49,14 +49,14 @@ def download_file_by_location(location_id, year, month, day):
 conn=get_connection()
 cursor=conn.cursor()
 
-for _, row in dif.iterrows():
+for _, row in df.iterrows():
     cursor.execute("""
     INSERT INTO Mittaukset (sensoriID, arvo, aika)
     VALUES (%s,%s,%s)
     """,(row ["sensoriId"],row ["arvo"],row ["aika"]))
     conn.commit()
-cursor.close()
-conn.close()
+    cursor.close()
+    conn.close()
         
         print("Tallennettu:", f"{location_id}-{date_str}.csv")
     else:
@@ -74,3 +74,5 @@ if __name__ == "__main__":
         first_location_id = locations[0]["id"]
         print("Haetaan data location_id:", first_location_id)
         download_file_by_location(first_location_id, 2023, 1, 15)
+        for day in range(1, 31):
+            download_file_by_locations(first_location_id, 2023, 1, day)
